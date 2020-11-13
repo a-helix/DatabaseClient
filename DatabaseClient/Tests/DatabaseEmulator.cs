@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Credentials;
+﻿using Credentials;
 using Repository;
+using System;
+using System.Collections.Generic;
 
 namespace DatabaseClients.Tests
 {

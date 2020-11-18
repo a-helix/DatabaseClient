@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Repository;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DatabaseClient
 {
-    class MySqlDatabaseClient : DbContext, IRepository<Subscription>
+    public class MySqlDatabaseClient : DbContext, IRepository<Subscription>
     {
         public DbSet<Subscription> subscription { get; set; }
         DbContextOptionsBuilder optionsBuilder;
@@ -39,9 +40,17 @@ namespace DatabaseClient
             Create(read);
         }
 
+        public List<Subscription> AllActiveSubscriptions()
+        {
+            return subscription.Where(c => c.Active == true).ToList();
+        }
+
         public void Save()
         {
-            SaveChanges();
+            lock(subscription)
+            {
+                SaveChanges();
+            }
         }
     }
 }

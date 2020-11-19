@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DatabaseClient
 {
-    public class MySqlDatabaseClient : DbContext, IRepository<Subscription>, IUnitOfWork<Subscription>
+    public class MySqlDatabaseClient : DbContext, IRepository<Subscription>
     {
         public DbSet<Subscription> subscription { get; set; }
         DbContextOptionsBuilder optionsBuilder;
@@ -51,7 +51,7 @@ namespace DatabaseClient
             Create(read);
         }
 
-        public List<Subscription> AllActiveSubscriptions()
+        public List<Subscription> AllActive()
         {
             return subscription.Where(c => c.Active == true).ToList();
         }

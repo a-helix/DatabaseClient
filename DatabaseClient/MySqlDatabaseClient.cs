@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DatabaseClient
 {
-    public class MySqlDatabaseClient : DbContext, IRepository<Subscription>
+    public class MySqlDatabaseClient : DbContext, IRepository<Subscription>, IUnitOfWork<Subscription>
     {
         public DbSet<Subscription> subscription { get; set; }
         DbContextOptionsBuilder optionsBuilder;
@@ -18,18 +18,29 @@ namespace DatabaseClient
         public void Create(Subscription subscribe)
         {
             Database.EnsureCreated();
-            subscription.Add(subscribe);
+            lock (subscription)
+            {
+                subscription.Add(subscribe);
+            }
         }
 
         public void Delete(string id)
         {
             var sub = new Subscription { ID = id };
-            subscription.Remove(sub);
+            lock(subscription)
+            {
+                subscription.Remove(sub);
+            }
         }
 
         public Subscription Read(string id)
         {
-            return subscription.FirstOrDefault(c => c.ID == id);
+            Subscription feedback;
+            lock (subscription)
+            {
+                feedback = subscription.FirstOrDefault(c => c.ID == id);
+            }
+            return feedback;
         }
 
         public void Update(string id, string lastSent)

@@ -21,6 +21,7 @@ namespace DatabaseClient
             lock (subscription)
             {
                 subscription.Add(subscribe);
+                SaveChanges();
             }
         }
 
@@ -30,6 +31,7 @@ namespace DatabaseClient
             lock(subscription)
             {
                 subscription.Remove(sub);
+                SaveChanges();
             }
         }
 
@@ -49,19 +51,15 @@ namespace DatabaseClient
             read.LastSent = int.Parse(lastSent);
             Delete(id);
             Create(read);
+            lock (subscription)
+            {
+                SaveChanges();
+            }
         }
 
         public List<Subscription> AllActive()
         {
             return subscription.Where(c => c.Active == true).ToList();
-        }
-
-        public void Save()
-        {
-            lock(subscription)
-            {
-                SaveChanges();
-            }
         }
     }
 }

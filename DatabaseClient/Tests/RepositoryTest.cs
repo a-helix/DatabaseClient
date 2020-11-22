@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DatabaseClients;
 using NUnit.Framework;
 
@@ -60,27 +61,49 @@ namespace DatabaseClients.Tests
             _db.Delete("Delete");
             Assert.IsFalse(_db.Contains("Delete"));
             _db.Delete("Not exhist.");
-            _db.Delete("Not exhist.");
         }
 
         [Test]
         public void UpdateTest()
         {
-            Dictionary<string, string> dict = new Dictionary<string, string>()
+            Dictionary<string, string> dictZero = new Dictionary<string, string>()
+            {
+                {"latitude",  "0" },
+                {"longitude", "0" },
+                {"geolocation", "0;1" },
+                {"area", "Test" },
+            };
+            Dictionary<string, string> dictOne = new Dictionary<string, string>()
             {
                 {"latitude",  "0" },
                 {"longitude", "0" },
                 {"geolocation", "0;0" },
-                {"area", "Zero" },
+                {"area", "Test" },
             };
-            ApiResponse test = new ApiResponse(dict);
-            _db.Create(test);
-            Assert.IsTrue(_db.Contains("Zero"));
-            Assert.IsFalse(_db.Contains("null"));
-            _db.Update("Zero", "null");
-            Assert.IsFalse(_db.Contains("Zero"));
-            Assert.IsTrue(_db.Contains("null"));
-            Assert.Throws<KeyNotFoundException>(() => _db.Update("Not exhist.", "Still not exhist."));
+            ApiResponse testValue1 = new ApiResponse(dictZero);
+            ApiResponse testValue2 = new ApiResponse(dictOne);
+            _db.Create(testValue1);
+            Assert.IsTrue(_db.Contains("Test"));
+            var feedback = _db.Read("Test");
+            Assert.AreEqual(
+                Convert.ToString(feedback.Value("geolocation")),
+                Convert.ToString(testValue1.Value("geolocation"))
+                );
+            _db.Update(testValue2);
+            feedback = _db.Read("Test");
+            Assert.AreEqual(
+                Convert.ToString(feedback.Value("geolocation")),
+                Convert.ToString(testValue2.Value("geolocation"))
+                );
+            Dictionary<string, string> dictNotExhist = new Dictionary<string, string>()
+            {
+                {"latitude",  "0" },
+                {"longitude", "0" },
+                {"geolocation", "0;0" },
+                {"area", "not exhist" },
+            };
+            ApiResponse testValue3 = new ApiResponse(dictNotExhist);
+            Assert.Throws<KeyNotFoundException>(() => _db.Update(testValue3));
         }
     }
 }

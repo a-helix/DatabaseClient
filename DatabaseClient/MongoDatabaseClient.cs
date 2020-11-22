@@ -41,11 +41,11 @@ namespace DatabaseClients
             return response;
         }
 
-        public void Update(string geocoordinates, string newArea)
+        public void Update(ApiResponse coordinates)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("geolocation", geocoordinates);
-            var update = Builders<BsonDocument>.Update.Set("area", newArea);
-            _collection.UpdateOne(filter, update);
+            var filter = Builders<BsonDocument>.Filter.Eq("geolocation", coordinates.Value("geolocation"));
+            _collection.DeleteOne(filter);
+            Create(coordinates);
         }
 
         public void Delete(string location)

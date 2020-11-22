@@ -17,7 +17,7 @@ namespace DatabaseClients.Tests
         public void Create(ApiResponse coordinates)
         {
             JsonStringContent geolocation = new JsonStringContent(coordinates.ToString());
-            var key = geolocation.Value("area").ToString();
+            var key = Convert.ToString(geolocation.Value("area"));
             _database.Add(key, coordinates);
         }
 
@@ -33,26 +33,18 @@ namespace DatabaseClients.Tests
             return null;
         }
 
-        public void Update(string oldArea, string newArea)
+        public void Update(ApiResponse coordinates)
         {
             try
             {
-                var oldUnit = Read(oldArea);
-                var newUnit = new Dictionary<string, string>()
-                {
-                    { "latitude",  oldUnit.Value("latitude") },
-                    { "longitude", oldUnit.Value("longitude") },
-                    { "geolocation", oldUnit.Value("geolocation") },
-                    { "area", newArea }
-                };
-                _database.Remove(oldArea);
-                _database.Add(newArea, new ApiResponse(newUnit));
+                var oldUnit = Read(Convert.ToString(coordinates.Value("area")));
+                _database.Remove(Convert.ToString(oldUnit.Value("area")));
+                _database.Add(Convert.ToString(coordinates.Value("area")), coordinates);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new KeyNotFoundException();
             }
-
         }
 
         public bool Contains(string area)

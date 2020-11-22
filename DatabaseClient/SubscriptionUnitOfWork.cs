@@ -1,40 +1,47 @@
 ﻿using Repository;
-using System;
 using System.Collections.Generic;
-using System.Text;
+
 
 namespace DatabaseClient
 {
-    public class SubscriptionUnitOfWork : IRepository<Subscription>
+    public class SubscriptionUnitOfWork : IRepository<Subscription>, IUnitOfWork<Subscription>
     { 
-        private List<IRepository<Subscription>> _repositories;
-        private Dictionary<string,Subscription> _cleanList;
-        private List<Subscription> _dirtyList;
+        private IRepository<Subscription> _repositorie;
+        private Dictionary<string,Subscription> _readList;
+        private List<Subscription> _createList;
+        private List<Subscription> _updateList;
+        private List<string> _deleteList;
 
 
-        public SubscriptionUnitOfWork(string configPath)
+
+        public SubscriptionUnitOfWork(IRepository<Subscription> client)
         {
-            _repositories = new List<IRepository<Subscription>>();
-            _cleanList = new Dictionary<string, Subscription>();
-            _dirtyList = new List<Subscription>();
-        }
-
-        public void Attach(IRepository<Subscription> client)
-        {
-            _dbClients.Add(client);
+            _repositorie = client;
+            _readList = new Dictionary<string, Subscription>();
+            _createList = new List<Subscription>();
+            _updateList = new List<Subscription>();
+            _deleteList = new List<string>();
         }
 
         public void Save()
         {
-           foreach(var i in _dbClients)
+            foreach(var i in _createList)
             {
-
+                _repositorie.Create(i);
             }
-        }
-
-        public void Update(string id, string lastSent)
-        {
-
+            _createList = new List<Subscription>();
+            foreach (var i in _updateList)
+            {
+                _repositorie.Update(i);
+                _readList.Remove(i.ID);
+            }
+            _updateList = new List<Subscription>();
+            foreach (var i in _deleteList)
+            {
+                _repositorie.Delete(i);
+                _readList.Remove(i);
+            }
+            _deleteList = new List<string>();
         }
 
 
@@ -43,14 +50,23 @@ namespace DatabaseClient
             _createList.Add(coordinates);
         }
 
-        public Subscription Read(string location)
+        public Subscription Read(string unit)
         {
-            _readList.Add(location);
+            if (_readList.ContainsKey(unit))
+                return _readList[unit];
+            Subscription feedback = _repositorie.Read(unit);
+            _readList.Add(unit, feedback);
+            return feedback;
         }
 
         public void Delete(string id)
         {
             _deleteList.Add(id);
+        }
+
+        public void Update(Subscription unit)
+        {
+            _updateList.Add(unit);
         }
     }
 }

@@ -45,14 +45,13 @@ namespace DatabaseClient
             return feedback;
         }
 
-        public void Update(string id, string lastSent)
+        public void Update(Subscription unit)
         {
-            Subscription read = Read(id);
-            read.LastSent = int.Parse(lastSent);
-            Delete(id);
-            Create(read);
+
             lock (subscription)
             {
+                Delete(unit.ID);
+                Create(unit);
                 SaveChanges();
             }
         }

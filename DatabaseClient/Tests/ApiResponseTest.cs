@@ -56,14 +56,9 @@ namespace DatabaseClients.Tests
         }
 
         [Test]
-        public void ValuePositiveTest()
+        public void ValueTest()
         {
             Assert.AreEqual("value", test.Value("key"));
-        }
-
-        [Test]
-        public void ValueNegativeTest()
-        {
             Assert.Throws<KeyNotFoundException>(() => test.Value("not exhist"),
                 "The given key 'not exhist' was not present in the dictionary.");
         }
@@ -71,7 +66,7 @@ namespace DatabaseClients.Tests
         [Test]
         public void GetHashCodeTest()
         {
-            Assert.AreEqual(62407605, dict.GetHashCode());
+            Assert.AreEqual(928, test.GetHashCode());
         }
 
         [Test]
@@ -79,16 +74,11 @@ namespace DatabaseClients.Tests
         {
             ApiResponse compare = new ApiResponse(dict);
             Assert.IsTrue(test.Equals(compare));
-        }
-
-        [Test]
-        public void EqualsNegativeTest()
-        {
-            Dictionary<string, string> dict = new Dictionary<string, string>()
+            Dictionary<string, string> testDict = new Dictionary<string, string>()
             {
                 {"Hello", "World" }
             };
-            ApiResponse compare = new ApiResponse(dict);
+            compare = new ApiResponse(testDict);
             Assert.IsFalse(test.Equals(compare));
         }
     }

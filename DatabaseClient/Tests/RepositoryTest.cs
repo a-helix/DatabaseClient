@@ -12,12 +12,12 @@ namespace DatabaseClients.Tests
 
         }
         
-        private DatabaseEmulator _db;
+        private ApiResponseDatabaseEmulator _db;
 
         [SetUp]
         public void Setup()
         {
-            _db = new DatabaseEmulator();
+            _db = new ApiResponseDatabaseEmulator();
         }
 
         [Test]

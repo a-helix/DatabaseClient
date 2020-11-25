@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace DatabaseClients.Tests
 {
-    public class DatabaseEmulator : IRepository<ApiResponse>
+    public class ApiResponseDatabaseEmulator : IRepository<ApiResponse>
     {
         protected Dictionary<string, ApiResponse> _database;
 
-        public DatabaseEmulator()
+        public ApiResponseDatabaseEmulator()
         {
             _database = new Dictionary<string, ApiResponse>();
         }

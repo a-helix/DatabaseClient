@@ -92,7 +92,7 @@ namespace DatabaseClients
             char[] array = input.ToCharArray();
             foreach(char i in array)
             {
-                sum += (int) char.GetNumericValue(i);
+                sum += Convert.ToInt32(i);
             }
             return sum;
         }

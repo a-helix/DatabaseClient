@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using DatabaseClients;
+using DatabaseClient;
 using NUnit.Framework;
 
-namespace DatabaseClients.Tests
+namespace DatabaseClient.Tests
 {
     class RepositoryTest
     {

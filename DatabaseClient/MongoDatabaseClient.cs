@@ -4,7 +4,7 @@ using Repository;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace DatabaseClients
+namespace DatabaseClient
 {
     public class MongoDatabaseClient : IRepository<ApiResponse>
     {

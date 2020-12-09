@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using DatabaseClient;
 using NUnit.Framework;
 
-namespace DatabaseClients.Tests
+namespace DatabaseClient.Tests
 {
     public class ApiResponseTest
     {

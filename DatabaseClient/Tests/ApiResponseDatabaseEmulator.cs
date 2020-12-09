@@ -1,9 +1,10 @@
 ﻿using Credentials;
+using DatabaseClient;
 using Repository;
 using System;
 using System.Collections.Generic;
 
-namespace DatabaseClients.Tests
+namespace DatabaseClient.Tests
 {
     public class ApiResponseDatabaseEmulator : IRepository<ApiResponse>
     {
